@@ -18,6 +18,7 @@ server.get("/", (req, res) => {
   res.send(`<h2> Lambda - Authentication Project </h2>`);
 });
 
+//middleware
 function restricted(req, res, next) {
   const { username, password } = req.headers;
 
@@ -41,6 +42,7 @@ function restricted(req, res, next) {
   }
 }
 
+//Get users only if the user is logged in
 server.get("/api/users", restricted, async (req, res) => {
   try {
     const users = await db("users");
@@ -52,6 +54,7 @@ server.get("/api/users", restricted, async (req, res) => {
   }
 });
 
+//Create user and Hash the password
 server.post("/api/register", async (req, res) => {
   try {
     if (req.body.username && req.body.password) {
@@ -75,6 +78,7 @@ server.post("/api/register", async (req, res) => {
   }
 });
 
+//Create login
 server.post("/api/login", async (req, res) => {
   try {
     const { username, password } = await req.body;
