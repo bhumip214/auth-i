@@ -16,6 +16,7 @@ router.post("/", async (req, res) => {
       const user = await db("users")
         .where({ id })
         .first();
+      req.session.user = user;
       res.status(201).json(user);
     } else {
       res.status(400).json({

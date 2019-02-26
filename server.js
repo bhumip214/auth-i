@@ -3,7 +3,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const session = require("express-session");
+const knexSessionStore = require("connect-session-knex")(session);
 
+const db = require("./data/dbConfig");
 const usersRoute = require("./users/users-route");
 const registerRoute = require("./auth/register-route");
 const loginRoute = require("./auth/login-route");
@@ -11,7 +13,7 @@ const loginRoute = require("./auth/login-route");
 const server = express();
 
 const sessionConfig = {
-  name: "monkey",
+  name: "",
   secret: "Keep it secret, keep it safe!",
   cookie: {
     maxAge: 1000 * 60 * 60, // in ms
@@ -19,7 +21,15 @@ const sessionConfig = {
   },
   httpOnly: true, // cannot access the cookie from js using document.cookie
   resave: false,
-  saveUninitialized: false // GDPR laws against cookies automatically
+  saveUninitialized: false, // GDPR laws against cookies automatically
+
+  store: new knexSessionStore({
+    knex: db,
+    tablename: "sessions",
+    sidfieldname: "sid",
+    createtable: true,
+    clearInterval: 1000 * 60 * 60 // in ms
+  })
 };
 
 server.use(express.json());
