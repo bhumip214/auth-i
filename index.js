@@ -3,9 +3,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
-const knex = require("knex");
-const knexConfig = require("./knexfile.js");
-const db = knex(knexConfig.development);
+
+const db = require("./data/dbConfig.js");
 
 const server = express();
 
