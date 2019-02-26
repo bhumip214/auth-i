@@ -1,31 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../data/dbConfig");
-const bcrypt = require("bcryptjs");
 
 router.use(express.json());
 
 //middleware
 function restricted(req, res, next) {
-  const { username, password } = req.headers;
-
-  if (username && password) {
-    db("users")
-      .where({ username })
-      .first()
-      .then(user => {
-        // check that passwords match
-        if (user && bcrypt.compareSync(password, user.password)) {
-          next();
-        } else {
-          res.status(401).json({ message: "Invalid Credentials" });
-        }
-      })
-      .catch(error => {
-        res.status(500).json({ message: "Ran into an unexprected errors" });
-      });
+  if (req.session && req.session.user) {
+    next();
   } else {
-    res.status(500).json({ message: "NO credentials provided" });
+    res.status(401).json({ message: "You shall not pass!" });
   }
 }
 
