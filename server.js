@@ -9,6 +9,7 @@ const db = require("./data/dbConfig");
 const usersRoute = require("./users/users-route");
 const registerRoute = require("./auth/register-route");
 const loginRoute = require("./auth/login-route");
+const logoutRoute = require("./auth/logout-route");
 
 const server = express();
 
@@ -40,6 +41,7 @@ server.use(session(sessionConfig));
 server.use("/api/users/", usersRoute);
 server.use("/api/register/", registerRoute);
 server.use("/api/login/", loginRoute);
+server.use("/api/logout/", logoutRoute);
 
 server.get("/", (req, res) => {
   res.send(`<h2> Lambda - Authentication Project </h2>`);
